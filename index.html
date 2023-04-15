@@ -1,1 +1,50 @@
-My repositories:
+﻿<div id="search-form">
+    <label for="search-term">Termo de busca:</label>
+    <input type="text" id="search-term" name="q">
+    <br>
+    <label for="search-language">Linguagem:</label>
+    <select id="search-language" name="language">
+      <option value="">Todas as linguagens</option>
+      <option value="JavaScript">JavaScript</option>
+      <option value="PHP">PHP</option>
+      <option value="c#">C#</option>
+    </select>
+    <br>
+    <label for="search-order">Ordenação:</label>
+    <select id="search-order" name="order">
+      <option value="full_name">Ordem alfabética</option>
+      <option value="pushed">Data do último commit</option>
+    </select>
+    <br>
+    <label for="search-direction">Direção:</label>
+    <select id="search-direction" name="direction">
+      <option value="asc">Ascendente</option>
+      <option value="desc">Descrescente</option>
+    </select>
+    <br>
+    <button onclick="buscarDados()">Pesquisar</button>
+  </div>
+  <div id="search-results"></div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+
+    function buscarDados() {
+        $.ajax({
+            url: "api.php",
+            method: "POST",
+            data: { 
+                    searchTerm: $("#search-term").val(), 
+                    searchLanguage: $("#search-language").val(), 
+                    searchOrder: $("#search-order").val(), 
+                    searchDirection: $("#search-direction").val() 
+            },
+            success: function(response) {
+                $("#search-results").html(response);
+            },
+            error: function(xhr, status, error) {
+                console.log("Erro na requisição: " + error);
+            }
+        });
+    }
+
+  </script>
