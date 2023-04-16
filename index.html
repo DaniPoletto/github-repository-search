@@ -1,71 +1,112 @@
 ﻿<!DOCTYPE html>
 <html>
   <head>
-    <title>Busca de repositórios do GitHub</title>
+    <title>GitHub repository search</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   </head>
   <body>
-    <div id="search-form">
-      <label for="search-term">Termo de busca:</label>
-      <input type="text" id="search-term" name="q">
-      <br>
-      <label for="search-language">Linguagem:</label>
-      <select id="search-language" name="language">
-        <option value="">Todas as linguagens</option>
-        <option value="JavaScript">JavaScript</option>
-        <option value="PHP">PHP</option>
-        <option value="c#">C#</option>
-      </select>
-      <br>
-      <label for="search-order">Ordenação:</label>
-      <select id="search-order" name="order">
-        <option value="full_name">Ordem alfabética</option>
-        <option value="pushed">Data do último commit</option>
-      </select>
-      <br>
-      <label for="search-direction">Direção:</label>
-      <select id="search-direction" name="direction">
-        <option value="asc">Ascendente</option>
-        <option value="desc">Descrescente</option>
-      </select>
-      <br>
-      <button onclick="buscarDados()">Pesquisar</button>
+    <div class="container-fluid" style="margin-top: 20px;">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Search GitHub repositories</h5>
+              <form>
+                <div class="form-group">
+                  <label for="search-term">Search term:</label>
+                  <input type="text" id="search-term" name="search-term" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="search-size">Size:</label>
+                  <input type="text" id="search-size" name="search-size" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="search-stars">Stars:</label>
+                  <input type="text" id="search-stars" name="search-stars" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="search-language">Language:</label>
+                  <select id="search-language" name="language" class="form-control">
+                    <option value="">All languages</option>
+                    <option value="JavaScript">JavaScript</option>
+                    <option value="PHP">PHP</option>
+                    <option value="c#">C#</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="search-order">Order:</label>
+                  <select id="search-order" name="order" class="form-control">
+                    <option value="full_name">Alphabetical order</option>
+                    <option value="pushed">Date of last commit</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="search-direction">Direction:</label>
+                  <select id="search-direction" name="direction" class="form-control">
+                    <option value="asc">Ascending</option>
+                    <option value="desc">Descending</option>
+                  </select>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="searchData()">Search</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Search results</h5>
+              <div id="search-results"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div id="search-results"></div>
   </body>
 </html>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-      function buscarDados() {
+      function searchData() {
         var searchTerm = $('#search-term').val();
         var searchLanguage = $('#search-language').val();
         var searchOrder = $('#search-order').val();
         var searchDirection = $('#search-direction').val();
-    
+        var searchSize = $('#search-size').val();
+        var searchStars = $('#search-stars').val();
+        
         $.ajax({
-          url: 'https://api.github.com/users/DaniPoletto/repos?sort=' + searchOrder + '&direction=' + searchDirection,
-          headers: {
-            'Accept': 'application/vnd.github.v3+json'
-          },
-          success: function (response) {
-            var html = '';
-            var i = 1;
-            $.each(response, function (index, repository) {
-              if (searchTerm && repository.name.toLowerCase().indexOf(searchTerm.toLowerCase()) === -1) {
-                return;
-              }
-              if (searchLanguage && repository.language !== searchLanguage) {
-                return;
-              }
-              html += i++ + ' - ' + repository.name + '<br>' + ' -- ' + repository.language + '<br><br>';
-            });
-            $('#search-results').html(html);
-          },
-          error: function (xhr, status, error) {
-            console.log('Erro na requisição: ' + error);
-          }
+        url: 'https://api.github.com/users/DaniPoletto/repos?sort=' + searchOrder + '&direction=' + searchDirection,
+        headers: {
+        'Accept': 'application/vnd.github.v3+json'
+        },
+        success: function (response) {
+        var html = '<table class="table"><thead><tr><th>#</th><th>Name</th><th>Language</th><th>Last commit</th><th>Size</th><th>Stars</th></tr></thead><tbody>';
+        var i = 1;
+        $.each(response, function (index, repository) {
+        console.log(repository)
+        if (searchTerm && repository.name.toLowerCase().indexOf(searchTerm.toLowerCase()) === -1) {
+        return;
+        }
+        if (searchLanguage && repository.language !== searchLanguage) {
+        return;
+        }
+        if (searchSize && repository.size != searchSize) {
+        return;
+        }
+        if (searchStars && repository.stargazers_count != searchStars) {
+        return;
+        }
+        html += '<tr><td>' + i++ + '</td><td>' + repository.name + '</td><td>' + repository.language + '</td><td>' + repository.pushed_at + '</td><td>' + repository.size + '</td><td>' + repository.stargazers_count + '</td></tr>';
         });
-      }
+        html += '</tbody></table>';
+        $('#search-results').html(html);
+        },
+        error: function (xhr, status, error) {
+        console.log('Error in request: ' + error);
+        }
+        });
+        }        
     </script>
     
