@@ -7,7 +7,7 @@ This project is an example of how to integrate the GitHub API to get a list of m
    - [X] Bootstrap
    
 ## Demo
-[Demo](https://danipoletto.github.io/github-repository-search/)
+[Click here to see the demo](https://danipoletto.github.io/github-repository-search/)
 
 ![Imagem](https://github.com/DaniPoletto/github-repository-search/blob/main/demo.jpg)
    
