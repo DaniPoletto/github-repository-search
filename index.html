@@ -86,7 +86,6 @@
                 var html = '<table class="table"><thead><tr><th>#</th><th>Name</th><th>Language</th><th>Last commit</th><th>Size</th><th>Stars</th></tr></thead><tbody>';
                 var i = 1;
                 $.each(response, function (index, repository) {
-                    console.log(repository);
                     if (searchTerm && repository.name.toLowerCase().indexOf(searchTerm.toLowerCase()) === -1) {
                         return;
                     }
