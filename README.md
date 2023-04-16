@@ -8,5 +8,7 @@ This project is an example of how to integrate the GitHub API to get a list of m
    
 ## Demo
 [Demo](https://danipoletto.github.io/github-repository-search/)
+
+![Imagem](https://github.com/DaniPoletto/github-repository-search/blob/main/demo.jpg)
    
 
